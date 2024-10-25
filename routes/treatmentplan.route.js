@@ -1,5 +1,5 @@
 import express from "express";
-import TreatmentPlanController from "../Controller/treatmentplan-controller";
+import TreatmentPlanController from "../Controller/treatmentplan.controller";
 import { check } from "express-validator";
 
 const router = express.Router();

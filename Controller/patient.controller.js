@@ -32,11 +32,11 @@ const PatientController = {
 
             const apiUrl = "https://dev.api.medica.lk/api/v1/Patient/GetPatient";
             // const apiUrl = process.env.PATIENT_URL;
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3Mjk3NzgyMDEsImV4cCI6MTcyOTc4MTgwMX0.fKZQgzMyXaPl-J9s_khdMZR-0ftNZJlMkv_gUcEspVk";
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3Mjk4MzAzNDAsImV4cCI6MTcyOTgzMzk0MH0.6DU1hPVC02XEmkGPFyHN4FUVat3IIcyhP9SrT9okatg";
 
             console.log("Request Body:", requestBody);
 
-            const apiResponse = await axios.post(process.env.PATIENT_URL, requestBody, {
+            const apiResponse = await axios.post(apiUrl, requestBody, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
