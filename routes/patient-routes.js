@@ -1,8 +1,17 @@
-import express from 'express';
-import {getPatient} from '../Controller/patient-controller.js'// Ensure the file extension is correct (.js)
+import express from "express";
+import PatientController from "../Controller/patient-controller.js"; // Ensure the file extension is correct (.js)
+import { check } from "express-validator";
 
 const router = express.Router();
 
-router.post("/getPatients", getPatient);
+router.post(
+  "/getPatients",
+  [
+    check("mobile").isInt(),
+    check("nic").isInt(),
+    check("uniqueId").isString(),
+  ],
+  PatientController.getPatient
+);
 
 export default router;

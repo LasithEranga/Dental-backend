@@ -1,23 +1,88 @@
-import express from 'express';
-import { getPatientDetails } from '../Services/patient-services.js'; 
+import executeSp from "../utils/exeSp.js";
+import { validationResult } from "express-validator";
+import ResponseMessages from "../config/messages.js";
+import axios from 'axios';
 
+const PatientController = {
+    /**
+     * Get patient by type and id
+     *
+     * @param {Request} req - Express request object
+     * @param {Response} res - Express response object
+     * @param {NextFunction} next - Express next function
+     * @returns {Promise<void>}
+     */
+    async getPatient(request, response, next) {
+        const { mobile, nic, uniqueId } = request.body;
 
-// Method to get patients by serviceFeeTypeId
-export const getPatient = async (req, res) => {
-    console.log(req.body);
-    try {
-        const {  mobile, nic,uniqueId } = req.body;
-        console.log('mobile:', mobile);
-        console.log('nic:', nic);
-        console.log('uniqueId:', uniqueId);
-        
-        
-        // Call the service function to fetch patient details
-        const patientDetails = await getPatientDetails( mobile, nic, uniqueId);
-        
-        // Send the response back to the client
-        return res.status(200).json(patientDetails);
-    } catch (error) {
-        return res.status(500).json({ message: 'Error fetching patient details', error: error.message });
-    }
+        try {
+            // Input validation
+            if (!mobile && !nic && !uniqueId) {
+                return response.status(400).json({
+                    success: false,
+                    message: "At least one search parameter (mobile, nic, or uniqueId) is required"
+                });
+            }
+
+            const requestBody = {
+                Mobile: mobile,
+                NIC: nic,
+                UniqueId: uniqueId,
+            };
+
+            const apiUrl = "https://dev.api.medica.lk/api/v1/Patient/GetPatient";
+            // const apiUrl = process.env.PATIENT_URL;
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3Mjk3NzgyMDEsImV4cCI6MTcyOTc4MTgwMX0.fKZQgzMyXaPl-J9s_khdMZR-0ftNZJlMkv_gUcEspVk";
+
+            console.log("Request Body:", requestBody);
+
+            const apiResponse = await axios.post(process.env.PATIENT_URL, requestBody, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            // Check if the API response contains data
+            if (!apiResponse.data) {
+                return response.status(404).json({
+                    success: false,
+                    message: "No patient data found"
+                });
+            }
+
+            return response.status(200).json({
+                success: true,
+                data: apiResponse.data
+            });
+
+        } catch (error) {
+            console.error("Error in getPatient:", error);
+
+            // Handle specific axios errors
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    return response.status(error.response.status).json({
+                        success: false,
+                        message: error.response.data?.message || "Error from patient API",
+                        error: error.response.data
+                    });
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    return response.status(503).json({
+                        success: false,
+                        message: "Unable to reach patient API",
+                        error: "Service unavailable"
+                    });
+                }
+            }
+            next(error);
+        }
+    },
 };
+
+export default PatientController;
+    
+  
