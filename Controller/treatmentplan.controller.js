@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
 import ResponseMessages from "../config/messages.js";
-import { DateString, EntityId, StringValue } from "../utils/type-def.js";
+import { ArrayValue, DateString, EntityId, StringValue } from "../utils/type-def.js";
 import executeSp from "../utils/exeSp.js";
 import handleResponse from "../utils/handleResponse.js";
 import handleError from "../utils/handleError.js";
@@ -99,7 +99,8 @@ const TreatmentPlanController = {
             InstituteId,
             UniqueId,
         Info,
-        UserModified} = request.body;
+        UserModified,
+        TreatmentData} = request.body;
 
         var params = [
             EntityId({ fieldName: "Id", value: Id }),
@@ -116,6 +117,7 @@ const TreatmentPlanController = {
             EntityId({ fieldName: "UniqueId", value: UniqueId }),
             EntityId({ fieldName: "UserModified", value: UserModified }),
             StringValue({ fieldName: "Info", value: Info }),
+            ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData})
         ];
 
         let treatmentPlanHistoryGetResult = await executeSp({
