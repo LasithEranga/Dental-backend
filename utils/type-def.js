@@ -113,14 +113,26 @@ export const DecimalValue = ({ fieldName, value }) => {
 // };
 
 export const ArrayValue = ({ fieldName, value }) => {
+  console.log("Validating array:", fieldName, value);
+  
+  // Ensure field name and array value are validated
   Validation.fieldName({ name: fieldName });
-  Validation.arrayValue({ name: fieldName, value });
+
+  // Use the static method `arrayValue` from Validation to validate and convert the array to TVP
+  const tvpData = Validation.arrayValue({ name: fieldName, value });
+  
+  console.log("TVP data prepared successfully for:", fieldName);
+  console.log("Array value:", value);
+  console.log("Field Name:", fieldName);
+
+  // Return the validated TVP object with the correct type
   return {
       name: fieldName,
-      type: Array,  // Or "string" if serializing
-      value, // Convert array to string to simplify
+      type: sql.TVP,  // TVP type for SQL Server
+      value: tvpData,  // TVP data
   };
 };
+
 
 
 

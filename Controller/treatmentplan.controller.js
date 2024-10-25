@@ -101,6 +101,7 @@ const TreatmentPlanController = {
         Info,
         UserModified,
         TreatmentData} = request.body;
+        console.log('TreatmentData:', TreatmentData);
 
         var params = [
             EntityId({ fieldName: "Id", value: Id }),
@@ -119,6 +120,8 @@ const TreatmentPlanController = {
             StringValue({ fieldName: "Info", value: Info }),
             ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData})
         ];
+        console.log('All Validations Passed');
+        console.log('Params:', params);
 
         let treatmentPlanHistoryGetResult = await executeSp({
             spName: `TreatmentPlanSave`,
