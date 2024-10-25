@@ -1,11 +1,11 @@
 import express from "express";
-import TreatmentPlanController from "../Controller/treatmentplan.controller";
+import TreatmentPlanController from "../Controller/treatmentplan.controller.js";
 import { check } from "express-validator";
 
 const router = express.Router();
 
 router.post(
-    "TreatmentPlanGet",
+    "/GetTreatmentPlanHistory",
     [
         check("UserId").isInt().not().isEmpty(),
         check("PatientId").isInt().not().isEmpty(),
@@ -13,3 +13,5 @@ router.post(
     ,
     TreatmentPlanController.getTreatmentPlanHistory
 )
+
+export default router;

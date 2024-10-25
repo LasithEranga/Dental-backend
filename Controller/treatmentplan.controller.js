@@ -1,9 +1,9 @@
 import { validationResult } from "express-validator";
-import ResponseMessages from "../config/messages";
-import { EntityId } from "../utils/type-def";
-import executeSp from "../utils/exeSp";
-import handleResponse from "../utils/handleResponse";
-import handleError from "../utils/handleError";
+import ResponseMessages from "../config/messages.js";
+import { EntityId } from "../utils/type-def.js";
+import executeSp from "../utils/exeSp.js";
+import handleResponse from "../utils/handleResponse.js";
+import handleError from "../utils/handleError.js";
 
 const TreatmentPlanController = {
     /**
@@ -27,11 +27,11 @@ const TreatmentPlanController = {
 
         try {
         let connection = request.app.locals.db;
-        const { UserId, PatentId } = request.body;
+        const { UserId, PatientId } = request.body;
 
         var params = [
             EntityId({ fieldName: "UserId", value: UserId }),
-            EntityId({ fieldName: "PatientId", value: PatentId }),
+            EntityId({ fieldName: "PatientId", value: PatientId }),
         ];
 
         let treatmentPlanHistoryGetResult = await executeSp({
