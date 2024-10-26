@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import ResponseMessages from "../config/messages.js";
-import { ArrayValue, DateString, EntityId, StringValue } from "../utils/type-def.js";
+import sql from "mssql";
+import { ArrayValue, DateString, EntityId, StringValue, TableValueParameters } from "../utils/type-def.js";
 import executeSp from "../utils/exeSp.js";
 import handleResponse from "../utils/handleResponse.js";
 import handleError from "../utils/handleError.js";
@@ -98,10 +99,29 @@ const TreatmentPlanController = {
             InstituteBranchId,
             InstituteId,
             UniqueId,
-        Info,
-        UserModified,
-        TreatmentData} = request.body;
+            Info,
+            UserModified,
+            TreatmentData
+        } = request.body;
 
+        const TreatmentDataList = [];
+
+        // Populate TreatmentDataList from request body
+        TreatmentData.forEach((treatment) => {
+            TreatmentDataList.push([
+                treatment.StartDate,
+                treatment.EndDate,
+                treatment.TreatmentStatus,
+                treatment.SelectedTeethPath,
+                treatment.TeethUpSelectedPath,
+                treatment.TeethSideSelectedPath,
+                treatment.TeethImageFileName,
+                treatment.DrawData,
+                treatment.CDTCode,
+                treatment.Info
+            ]);
+        });
+ 
         var params = [
             EntityId({ fieldName: "Id", value: Id }),
             EntityId({ fieldName: "TeethId", value: TeethId }),
@@ -117,7 +137,24 @@ const TreatmentPlanController = {
             EntityId({ fieldName: "UniqueId", value: UniqueId }),
             EntityId({ fieldName: "UserModified", value: UserModified }),
             StringValue({ fieldName: "Info", value: Info }),
-            ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData})
+            // ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData}),
+            TableValueParameters({
+                tableName: "TreatmentData",
+                columns: [
+                    { columnName: "StartDate", type: sql.DateTime },
+                    { columnName: "EndDate", type: sql.DateTime },
+                    { columnName: "TreatmentStatus", type: sql.NVarChar(30) },
+                    { columnName: "SelectedTeethPath", type: sql.NVarChar(sql.MAX) },
+                    { columnName: "TeethUpSelectedPath", type: sql.NVarChar(sql.MAX) },
+                    { columnName: "TeethSideSelectedPath", type: sql.NVarChar(sql.MAX) },
+                    { columnName: "TeethImageFileName", type: sql.NVarChar(255) },
+                    { columnName: "DrawData", type: sql.NVarChar(500) },
+                    { columnName: "CDTCode", type: sql.NVarChar(10) },
+                    { columnName: "Info", type: sql.NVarChar(200) }
+                ],
+                
+                values: TreatmentDataList,
+              }), 
         ];
 
         let treatmentPlanHistoryGetResult = await executeSp({
