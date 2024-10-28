@@ -41,15 +41,13 @@ const TeethController = {
 
         const params = [
             EntityId({ fieldName: "Id", value: Id }),
-            StringValue({ fieldName: TeethNumber , value: TeethNumber}),
-            StringValue({ fieldName: TeethName , value: TeethName}),
-            StringValue({ fieldName: UserType , value: UserType}),
-            StringValue({ fieldName: Category , value: Category}),
+            StringValue({ fieldName: "TeethNumber" , value: TeethNumber}),
+            StringValue({ fieldName: "TeethName" , value: TeethName}),
+            StringValue({ fieldName: "UserType" , value: UserType}),
+            StringValue({ fieldName: "Category" , value: Category}),
             EntityId({ fieldName: "UniqueId", value: UniqueId }),
             StringValue({ fieldName: "Info", value: Info }),
-        ];
-
-        console.log(params)
+        ]; 
 
         let teethGetResult = await executeSp({
             spName: `TeethSave`,
@@ -57,9 +55,10 @@ const TeethController = {
             connection,
         });
 
-        console.log(teethGetResult)
-
+        console.log(teethGetResult);
+        
         teethGetResult = teethGetResult.recordsets[0];
+        console.log("after",teethGetResult);
 
         handleResponse(
             response,
