@@ -14,6 +14,17 @@ router.post(
     TreatmentPlanController.getTreatmentPlanHistory
 )
 
+router.post(
+    "/GetTeethTreatmentPlanHistory",
+    [
+        check("UserId").isInt().not().isEmpty(),
+        check("PatientId").isInt().not().isEmpty(),
+        check("TeethId").isInt().not().isEmpty(),
+    ]
+    ,
+    TreatmentPlanController.getTeethTreatmentPlanHistory
+)
+
 
 router.post(
     "/TreatmentPlanSave",
