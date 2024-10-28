@@ -20,4 +20,18 @@ router.post(
     TeethController.saveTeeth
 ); 
 
+
+router.post(
+    "/getMissingTeeth"
+    ,
+    [
+        check("PatientId").isInt().not().isEmpty() 
+    ]
+    ,
+    TeethController.getMissingTeeth
+); 
+
+
+
+
 export default router;

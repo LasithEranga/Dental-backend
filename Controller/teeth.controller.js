@@ -80,8 +80,71 @@ const TeethController = {
             next(error);
         }
 
-    }
+    },
 
+
+    /**
+   *
+   * get medical certificate
+   *
+   * @param {request} request object
+   * @param {response} response object
+   * @param {next} next - middleware
+   * @returns
+   */
+    async getMissingTeeth(request, response, next) {
+        const errors = validationResult(request);
+        if (!errors.isEmpty()) {
+        return response.status(422).json({
+            error: true,
+            message: ResponseMessages.Teeth.VALIDATION_ERROR,
+            data: errors,
+        });
+        }
+
+        try {
+            let connection = request.app.locals.db;
+        
+        const { 
+            PatientId 
+        } = request.body;
+
+        const params = [
+            EntityId({ fieldName: "PatientId", value: PatientId })
+        ]; 
+
+        let missingTeethGetResult = await executeSp({
+            spName: `MissingTeethGet`,
+            params: params,
+            connection,
+        });
+
+        console.log(missingTeethGetResult);
+        
+        missingTeethGetResult = missingTeethGetResult.recordsets[0];
+        console.log("after",missingTeethGetResult);
+
+        handleResponse(
+            response,
+            200,
+            "success",
+            "Teeth Data save Successfully",
+            missingTeethGetResult
+        );
+
+
+        }catch(error){
+            handleError(
+                response,
+                500,
+                "error",
+                error.message,
+                "Something went wrong"
+            );
+            next(error);
+        }
+
+    }
 }
 
 export default TeethController;
