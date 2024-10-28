@@ -109,8 +109,8 @@ const TreatmentPlanController = {
         // Populate TreatmentDataList from request body
         TreatmentData.forEach((treatment) => {
             TreatmentDataList.push([
-                treatment.StartDate,
-                treatment.EndDate,
+                new Date(treatment.StartDate),  // Convert to Date object
+                new Date(treatment.EndDate),    // Convert to Date object
                 treatment.TreatmentStatus,
                 treatment.SelectedTeethPath,
                 treatment.TeethUpSelectedPath,
@@ -121,8 +121,9 @@ const TreatmentPlanController = {
                 treatment.Info
             ]);
         });
+
  
-        var params = [
+        const params = [
             EntityId({ fieldName: "Id", value: Id }),
             EntityId({ fieldName: "TeethId", value: TeethId }),
             StringValue({ fieldName: "TreatmentPlanName", value: TreatmentPlanName }),
@@ -137,25 +138,28 @@ const TreatmentPlanController = {
             EntityId({ fieldName: "UniqueId", value: UniqueId }),
             EntityId({ fieldName: "UserModified", value: UserModified }),
             StringValue({ fieldName: "Info", value: Info }),
-            // ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData}),
             TableValueParameters({
-                tableName: "TreatmentData",
+                tableName: "TreatmentData",  // This should be the parameter name from the stored procedure
+                type: "TREATMENTTYPE",       // This should be the SQL type name
                 columns: [
-                    { columnName: "StartDate", type: sql.DateTime },
-                    { columnName: "EndDate", type: sql.DateTime },
-                    { columnName: "TreatmentStatus", type: sql.NVarChar(30) },
+                    { columnName: "StartDate", type: sql.Date },
+                    { columnName: "EndDate", type: sql.Date },
+                    { columnName: "TreatmentStatus", type: sql.VarChar(50) },
                     { columnName: "SelectedTeethPath", type: sql.NVarChar(sql.MAX) },
                     { columnName: "TeethUpSelectedPath", type: sql.NVarChar(sql.MAX) },
                     { columnName: "TeethSideSelectedPath", type: sql.NVarChar(sql.MAX) },
-                    { columnName: "TeethImageFileName", type: sql.NVarChar(255) },
-                    { columnName: "DrawData", type: sql.NVarChar(500) },
-                    { columnName: "CDTCode", type: sql.NVarChar(10) },
-                    { columnName: "Info", type: sql.NVarChar(200) }
+                    { columnName: "TeethImageFileName", type: sql.VarChar(255) },
+                    { columnName: "DrawData", type: sql.NVarChar(sql.MAX) },
+                    { columnName: "CDTCode", type: sql.VarChar(10) },
+                    { columnName: "Info", type: sql.NVarChar(sql.MAX) }
                 ],
-                
                 values: TreatmentDataList,
-              }), 
+            }),
         ];
+        
+         
+
+        console.log("Data list ------",TreatmentDataList);
 
         let treatmentPlanHistoryGetResult = await executeSp({
             spName: `TreatmentPlanSave`,
@@ -166,6 +170,8 @@ const TreatmentPlanController = {
         treatmentPlanHistoryGetResult =
             treatmentPlanHistoryGetResult.recordsets[0];
 
+
+            console.log("resutl ///////////",treatmentPlanHistoryGetResult);
         handleResponse(
             response,
             200,

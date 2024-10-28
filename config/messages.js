@@ -29,8 +29,7 @@ const ResponseMessages = {
     DELETE_FAILED: "Failed to delete TreatmentPlan!",
   },
     
-   
-  MedicalCertificate: {
+  Teeth: {
     VALIDATION_ERROR: "Validation errors",
   }, 
 };

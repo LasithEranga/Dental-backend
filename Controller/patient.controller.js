@@ -32,7 +32,7 @@ const PatientController = {
 
             const apiUrl = "https://dev.api.medica.lk/api/v1/Patient/GetPatient";
             // const apiUrl = process.env.PATIENT_URL;
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3Mjk4MzAzNDAsImV4cCI6MTcyOTgzMzk0MH0.6DU1hPVC02XEmkGPFyHN4FUVat3IIcyhP9SrT9okatg";
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3MzAwODQ5MzIsImV4cCI6MTczMDA4ODUzMn0.LuTY8oNgQhx35wAP5L4DE18BnBb0Cb1mS79JV5_DxgY";
 
             console.log("Request Body:", requestBody);
 
