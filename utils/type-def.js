@@ -131,57 +131,32 @@ export const ArrayValue = ({ fieldName, value }) => {
  * @param {columns} array of objects [ { columnName, type, options } ]
  * @returns
  */
-// export const TableValueParameters = ({ tableName, columns, values }) => {
-//   // note that the mssql package does not currently support retrieving User Defined Types directly.
-//   // create the new table
-//   // this will not create a table in mssql database, it will create a instance in the memory instead
-//   let table = new sql.Table(tableName);
-
-//   // adding columns
-//   columns.forEach(({ columnName, type, options }) => {
-//     if (options) {
-//       table.columns.add(columnName, type, options);
-//       console.log("add column option name", columnName)
-//     } else {
-//       table.columns.add(columnName, type);
-//       console.log("else add column", columnName)
-//     }
-//   });
-
-//    values.map((value) => {
-//       table.rows.add(...value);
-//       console.log("values ----------" ,value)
-//     });
-      
-//   return {
-//     name: tableName,
-//     type: sql.TVP,
-//     value: table,
-//   };
-// };
-
-
-export const TableValueParameters = ({ tableName, type, columns, values }) => {
-  // Create the new table with the SQL type name
+export const TableValueParameters = ({ tableName, columns, values }) => {
+  // note that the mssql package does not currently support retrieving User Defined Types directly.
+  // create the new table
+  // this will not create a table in mssql database, it will create a instance in the memory instead
   let table = new sql.Table(tableName);
-  table.schema = type;  // Set the schema to the SQL type name
 
   // adding columns
   columns.forEach(({ columnName, type, options }) => {
-      if (options) {
-          table.columns.add(columnName, type, options);
-      } else {
-          table.columns.add(columnName, type);
-      }
+    if (options) {
+      table.columns.add(columnName, type, options);
+      console.log("add column option name", columnName)
+    } else {
+      table.columns.add(columnName, type);
+      console.log("else add column", columnName)
+    }
   });
 
-  values.map((value) => {
+   values.map((value) => {
       table.rows.add(...value);
-  });
+      console.log("values ----------" ,value)
+    });
       
   return {
-      name: tableName,  // This will be the parameter name in the stored procedure
-      type: sql.TVP,
-      value: table,
+    name: tableName,
+    type: sql.TVP,
+    value: table,
   };
 };
+

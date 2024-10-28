@@ -139,8 +139,7 @@ const TreatmentPlanController = {
             EntityId({ fieldName: "UserModified", value: UserModified }),
             StringValue({ fieldName: "Info", value: Info }),
             TableValueParameters({
-                tableName: "TreatmentData",  // This should be the parameter name from the stored procedure
-                type: "TREATMENTTYPE",       // This should be the SQL type name
+                tableName: "TreatmentData", 
                 columns: [
                     { columnName: "StartDate", type: sql.Date },
                     { columnName: "EndDate", type: sql.Date },
