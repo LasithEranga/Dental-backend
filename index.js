@@ -8,7 +8,7 @@ import { info } from './config/logger.js';
 import PatientRoutes from './routes/patient.route.js';
 import TreatmentPlanRoutes from './routes/treatmentplan.route.js'
 import TeethRoutes from './routes/teeth.route.js'
-
+import TreatmentRoutes from './routes/treatment.route.js'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,8 +21,9 @@ app.get('/', (req, res) => {
 });
 
 app.use("/Patients",PatientRoutes);
-app.use("/Treatment", TreatmentPlanRoutes);
+app.use("/TreatmentPlan", TreatmentPlanRoutes);
 app.use("/Teeth",TeethRoutes);
+app.use("/Treatment",TreatmentRoutes);
 
 getConnection()
   .then(() => {
