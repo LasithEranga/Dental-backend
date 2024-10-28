@@ -32,7 +32,7 @@ router.post(
         check("UniqueId").isInt().not().isEmpty(),
         check("UserModified").isInt().not().isEmpty(),
         check("Info").isString().not().isEmpty(),
-        check("TreatmentData").isArray().not().isEmpty(),
+        // check("TreatmentData").isArray().not().isEmpty(),
     ]
     ,
     TreatmentPlanController.saveTreatmentPlan
