@@ -1,7 +1,6 @@
 import { validationResult } from "express-validator";
 import ResponseMessages from "../config/messages.js";
-import sql from "mssql";
-import { ArrayValue, DateString, EntityId, StringValue, TableValueParameters } from "../utils/type-def.js";
+import { ArrayValue, DateString, EntityId, StringValue } from "../utils/type-def.js";
 import executeSp from "../utils/exeSp.js";
 import handleResponse from "../utils/handleResponse.js";
 import handleError from "../utils/handleError.js";
@@ -99,31 +98,12 @@ const TreatmentPlanController = {
             InstituteBranchId,
             InstituteId,
             UniqueId,
-            Info,
-            UserModified,
-            TreatmentData
-        } = request.body;
+        Info,
+        UserModified,
+        TreatmentData} = request.body;
+        console.log('TreatmentData:', TreatmentData);
 
-        const TreatmentDataList = [];
-
-        // Populate TreatmentDataList from request body
-        TreatmentData.forEach((treatment) => {
-            TreatmentDataList.push([
-                new Date(treatment.StartDate),  // Convert to Date object
-                new Date(treatment.EndDate),    // Convert to Date object
-                treatment.TreatmentStatus,
-                treatment.SelectedTeethPath,
-                treatment.TeethUpSelectedPath,
-                treatment.TeethSideSelectedPath,
-                treatment.TeethImageFileName,
-                treatment.DrawData,
-                treatment.CDTCode,
-                treatment.Info
-            ]);
-        });
-
- 
-        const params = [
+        var params = [
             EntityId({ fieldName: "Id", value: Id }),
             EntityId({ fieldName: "TeethId", value: TeethId }),
             StringValue({ fieldName: "TreatmentPlanName", value: TreatmentPlanName }),
@@ -138,28 +118,10 @@ const TreatmentPlanController = {
             EntityId({ fieldName: "UniqueId", value: UniqueId }),
             EntityId({ fieldName: "UserModified", value: UserModified }),
             StringValue({ fieldName: "Info", value: Info }),
-            TableValueParameters({
-                tableName: "TreatmentData",  // This should be the parameter name from the stored procedure
-                type: "TREATMENTTYPE",       // This should be the SQL type name
-                columns: [
-                    { columnName: "StartDate", type: sql.Date },
-                    { columnName: "EndDate", type: sql.Date },
-                    { columnName: "TreatmentStatus", type: sql.VarChar(50) },
-                    { columnName: "SelectedTeethPath", type: sql.NVarChar(sql.MAX) },
-                    { columnName: "TeethUpSelectedPath", type: sql.NVarChar(sql.MAX) },
-                    { columnName: "TeethSideSelectedPath", type: sql.NVarChar(sql.MAX) },
-                    { columnName: "TeethImageFileName", type: sql.VarChar(255) },
-                    { columnName: "DrawData", type: sql.NVarChar(sql.MAX) },
-                    { columnName: "CDTCode", type: sql.VarChar(10) },
-                    { columnName: "Info", type: sql.NVarChar(sql.MAX) }
-                ],
-                values: TreatmentDataList,
-            }),
+            ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData})
         ];
-        
-         
-
-        console.log("Data list ------",TreatmentDataList);
+        console.log('All Validations Passed');
+        console.log('Params:', params);
 
         let treatmentPlanHistoryGetResult = await executeSp({
             spName: `TreatmentPlanSave`,
@@ -170,8 +132,6 @@ const TreatmentPlanController = {
         treatmentPlanHistoryGetResult =
             treatmentPlanHistoryGetResult.recordsets[0];
 
-
-            console.log("resutl ///////////",treatmentPlanHistoryGetResult);
         handleResponse(
             response,
             200,
