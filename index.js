@@ -6,7 +6,8 @@ import { info } from './config/logger.js';
 
 //import routes
 import PatientRoutes from './routes/patient.route.js';
-import TreatmentPlan from './routes/treatmentplan.route.js'
+import TreatmentPlanRoutes from './routes/treatmentplan.route.js'
+import TeethRoutes from './routes/teeth.route.js'
 
 
 const app = express();
@@ -20,7 +21,8 @@ app.get('/', (req, res) => {
 });
 
 app.use("/Patients",PatientRoutes);
-app.use("/Treatment", TreatmentPlan)
+app.use("/Treatment", TreatmentPlanRoutes);
+app.use("/Teeth",TeethRoutes);
 
 getConnection()
   .then(() => {
