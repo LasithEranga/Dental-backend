@@ -72,6 +72,7 @@ class Validation {
 
     // Define required fields with type validation
     const requiredFields = [
+        { key: 'TreatmentName', type: 'string' },
         { key: 'StartDate', type: 'string', pattern: /^\d{4}-\d{2}-\d{2}$/, errorMsg: 'in YYYY-MM-DD format' },
         { key: 'EndDate', type: 'string', pattern: /^\d{4}-\d{2}-\d{2}$/, errorMsg: 'in YYYY-MM-DD format' },
         { key: 'TreatmentStatus', type: 'string' },
@@ -81,6 +82,7 @@ class Validation {
 
     // Prepare data for TVP
     const tvpData = new all.Table();
+    tvpData.columns.add('TreatmentName', all.VarChar(10));
     tvpData.columns.add('StartDate', all.VarChar(10));
     tvpData.columns.add('EndDate', all.VarChar(10));
     tvpData.columns.add('TreatmentStatus', all.VarChar(50));
@@ -108,6 +110,7 @@ class Validation {
 
         // Add validated item to the TVP data
         tvpData.rows.add(
+            item.TreatmentName,
             item.StartDate,
             item.EndDate,
             item.TreatmentStatus,
