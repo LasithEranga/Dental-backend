@@ -100,7 +100,12 @@ const TreatmentPlanController = {
             UniqueId,
         Info,
         UserModified,
-        TreatmentData} = request.body;
+        TreatmentData,
+        SelectedTeethPath,
+        TeethUpSelectedPath,
+        TeethSideSelectedPath,
+        TeethImageFileName,
+        DrawData} = request.body;
         console.log('TreatmentData:', TreatmentData);
 
         var params = [
@@ -118,7 +123,12 @@ const TreatmentPlanController = {
             EntityId({ fieldName: "UniqueId", value: UniqueId }),
             EntityId({ fieldName: "UserModified", value: UserModified }),
             StringValue({ fieldName: "Info", value: Info }),
-            ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData})
+            ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData}),
+            StringValue({ fieldName: "SelectedTeethPath", value: SelectedTeethPath }),
+            StringValue({ fieldName: "TeethUpSelectedPath", value: TeethUpSelectedPath }),
+            StringValue({ fieldName: "TeethSideSelectedPath", value: TeethSideSelectedPath }),
+            StringValue({ fieldName: "TeethImageFileName", value: TeethImageFileName }),
+            StringValue({ fieldName: "DrawData", value: DrawData }),
         ];
         console.log('All Validations Passed');
         console.log('Params:', params);

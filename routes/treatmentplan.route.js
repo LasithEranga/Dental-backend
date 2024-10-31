@@ -43,6 +43,11 @@ router.post(
         check("UniqueId").isInt().not().isEmpty(),
         check("UserModified").isInt().not().isEmpty(),
         check("Info").isString().not().isEmpty(),
+        check("SelectedTeethPath").isString().not().isEmpty(),
+        check("TeethUpSelectedPath").isString().not().isEmpty(),
+        check("TeethSideSelectedPath").isString().not().isEmpty(),
+        check("TeethImageFileName").isString().not().isEmpty(),
+        check("DrawData").isString().not().isEmpty(),
         // check("TreatmentData").isArray().not().isEmpty(),
     ]
     ,

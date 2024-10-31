@@ -75,11 +75,6 @@ class Validation {
         { key: 'StartDate', type: 'string', pattern: /^\d{4}-\d{2}-\d{2}$/, errorMsg: 'in YYYY-MM-DD format' },
         { key: 'EndDate', type: 'string', pattern: /^\d{4}-\d{2}-\d{2}$/, errorMsg: 'in YYYY-MM-DD format' },
         { key: 'TreatmentStatus', type: 'string' },
-        { key: 'SelectedTeethPath', type: 'string' },
-        { key: 'TeethUpSelectedPath', type: 'string' },
-        { key: 'TeethSideSelectedPath', type: 'string' },
-        { key: 'TeethImageFileName', type: 'string' },
-        { key: 'DrawData', type: 'string' },
         { key: 'CDTCode', type: 'string' },
         { key: 'Info', type: 'string' }
     ];
@@ -89,11 +84,6 @@ class Validation {
     tvpData.columns.add('StartDate', all.VarChar(10));
     tvpData.columns.add('EndDate', all.VarChar(10));
     tvpData.columns.add('TreatmentStatus', all.VarChar(50));
-    tvpData.columns.add('SelectedTeethPath', all.VarChar(255));
-    tvpData.columns.add('TeethUpSelectedPath', all.VarChar(255));
-    tvpData.columns.add('TeethSideSelectedPath', all.VarChar(255));
-    tvpData.columns.add('TeethImageFileName', all.VarChar(255));
-    tvpData.columns.add('DrawData', all.Text);
     tvpData.columns.add('CDTCode', all.VarChar(10));
     tvpData.columns.add('Info', all.Text);
 
@@ -121,11 +111,6 @@ class Validation {
             item.StartDate,
             item.EndDate,
             item.TreatmentStatus,
-            item.SelectedTeethPath,
-            item.TeethUpSelectedPath,
-            item.TeethSideSelectedPath,
-            item.TeethImageFileName,
-            item.DrawData,
             item.CDTCode,
             item.Info
         );
