@@ -4,18 +4,15 @@ import executeSp from "../utils/exeSp.js";
 import handleResponse from "../utils/handleResponse.js";
 import handleError from "../utils/handleError.js";
 
-
 const TeethController = {
-
     /**
-   *
-   * get medical certificate
-   *
-   * @param {request} request object
-   * @param {response} response object
-   * @param {next} next - middleware
-   * @returns
-   */
+     *
+     *
+     * @param {request} request object
+     * @param {response} response object
+     * @param {next} next - middleware
+     * @returns
+     */
     async saveTeeth(request, response, next) {
         const errors = validationResult(request);
         if (!errors.isEmpty()) {
@@ -27,27 +24,20 @@ const TeethController = {
         }
 
         try {
-            let connection = request.app.locals.db;
-        
-        const { 
-            Id, 
-            TeethNumber,
-            TeethName,
-            UserType,
-            Category,
-            UniqueId,
-            Info, 
-        } = request.body;
+        let connection = request.app.locals.db;
+
+        const { Id, TeethNumber, TeethName, UserType, Category, UniqueId, Info } =
+            request.body;
 
         const params = [
             EntityId({ fieldName: "Id", value: Id }),
-            StringValue({ fieldName: "TeethNumber" , value: TeethNumber}),
-            StringValue({ fieldName: "TeethName" , value: TeethName}),
-            StringValue({ fieldName: "UserType" , value: UserType}),
-            StringValue({ fieldName: "Category" , value: Category}),
+            StringValue({ fieldName: "TeethNumber", value: TeethNumber }),
+            StringValue({ fieldName: "TeethName", value: TeethName }),
+            StringValue({ fieldName: "UserType", value: UserType }),
+            StringValue({ fieldName: "Category", value: Category }),
             EntityId({ fieldName: "UniqueId", value: UniqueId }),
             StringValue({ fieldName: "Info", value: Info }),
-        ]; 
+        ];
 
         let teethGetResult = await executeSp({
             spName: `TeethSave`,
@@ -56,9 +46,9 @@ const TeethController = {
         });
 
         console.log(teethGetResult);
-        
+
         teethGetResult = teethGetResult.recordsets[0];
-        console.log("after",teethGetResult);
+        console.log("after", teethGetResult);
 
         handleResponse(
             response,
@@ -67,31 +57,26 @@ const TeethController = {
             "Teeth Data save Successfully",
             teethGetResult
         );
-
-
-        }catch(error){
-            handleError(
-                response,
-                500,
-                "error",
-                error.message,
-                "Something went wrong"
-            );
-            next(error);
+        } catch (error) {
+        handleError(
+            response,
+            500,
+            "error",
+            error.message,
+            "Something went wrong"
+        );
+        next(error);
         }
-
     },
 
-
     /**
-   *
-   * get medical certificate
-   *
-   * @param {request} request object
-   * @param {response} response object
-   * @param {next} next - middleware
-   * @returns
-   */
+     *
+     *
+     * @param {request} request object
+     * @param {response} response object
+     * @param {next} next - middleware
+     * @returns
+     */
     async getMissingTeeth(request, response, next) {
         const errors = validationResult(request);
         if (!errors.isEmpty()) {
@@ -103,15 +88,11 @@ const TeethController = {
         }
 
         try {
-            let connection = request.app.locals.db;
-        
-        const { 
-            PatientId 
-        } = request.body;
+        let connection = request.app.locals.db;
 
-        const params = [
-            EntityId({ fieldName: "PatientId", value: PatientId })
-        ]; 
+        const { PatientId } = request.body;
+
+        const params = [EntityId({ fieldName: "PatientId", value: PatientId })];
 
         let missingTeethGetResult = await executeSp({
             spName: `MissingTeethGet`,
@@ -120,31 +101,86 @@ const TeethController = {
         });
 
         console.log(missingTeethGetResult);
-        
+
         missingTeethGetResult = missingTeethGetResult.recordsets[0];
-        console.log("after",missingTeethGetResult);
+        console.log("after", missingTeethGetResult);
 
         handleResponse(
             response,
             200,
             "success",
-            "Teeth Data save Successfully",
+            "MissingTeeth Data retrieve Successfully",
             missingTeethGetResult
         );
+        } catch (error) {
+        handleError(
+            response,
+            500,
+            "error",
+            error.message,
+            "Something went wrong"
+        );
+        next(error);
+        }
+    },
 
-
-        }catch(error){
-            handleError(
-                response,
-                500,
-                "error",
-                error.message,
-                "Something went wrong"
-            );
-            next(error);
+    /**
+     * 
+     *
+        @param {request} request object
+        * @param {response} response object
+        * @param {next} next - middleware
+        * @returns
+        */
+    async getAllTreatmentTeeth(request, response, next) {
+        const errors = validationResult(request);
+        if (!errors.isEmpty()) {
+        return response.status(422).json({
+            error: true,
+            message: ResponseMessages.Teeth.VALIDATION_ERROR,
+            data: errors,
+        });
         }
 
-    }
-}
+        try {
+        let connection = request.app.locals.db;
+
+        const { UserId, PatientId } = request.body;
+
+        var params = [
+            EntityId({ fieldName: "UserId", value: UserId }),
+            EntityId({ fieldName: "PatientId", value: PatientId }),
+        ];
+
+        let missingTeethGetResult = await executeSp({
+            spName: `TeethTreatmentGet`,
+            params: params,
+            connection,
+        });
+
+        console.log(missingTeethGetResult);
+
+        missingTeethGetResult = missingTeethGetResult.recordsets[0];
+        console.log("after", missingTeethGetResult);
+
+        handleResponse(
+            response,
+            200,
+            "success",
+            "Teeth Data retrieve Successfully",
+            missingTeethGetResult
+        );
+        } catch (error) {
+        handleError(
+            response,
+            500,
+            "error",
+            error.message,
+            "Something went wrong"
+        );
+        next(error);
+        }
+    },
+};
 
 export default TeethController;
