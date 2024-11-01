@@ -31,7 +31,7 @@ const PatientController = {
             };
 
             const apiUrl = process.env.PATIENT_URL;
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3MzAxODA1MTgsImV4cCI6MTczMDE4NDExOH0.CPPbBqXKlG0vUPHtsYb9dQ7cChxxmUW5UpmLwN366Q4";
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3MzA0NDQ2NzIsImV4cCI6MTczMDQ0ODI3Mn0.0cVVVAZi-qn6BSFSKV9G7sAXZGciro10AhI54tuhot0";
 
             console.log("Request Body:", requestBody);
 
