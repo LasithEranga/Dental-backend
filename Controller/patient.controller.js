@@ -14,10 +14,12 @@ const PatientController = {
      */
     async getPatient(request, response, next) {
         const { mobile, nic, uniqueId } = request.body;
+        console.log("Request Body:", request.body);
 
         try {
             // Input validation
             if (!mobile && !nic && !uniqueId) {
+                console.log("At least one search parameter (mobile, nic, or uniqueId) is required");
                 return response.status(400).json({
                     success: false,
                     message: "At least one search parameter (mobile, nic, or uniqueId) is required"
@@ -31,7 +33,17 @@ const PatientController = {
             };
 
             const apiUrl = process.env.PATIENT_URL;
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3MzAxODA1MTgsImV4cCI6MTczMDE4NDExOH0.CPPbBqXKlG0vUPHtsYb9dQ7cChxxmUW5UpmLwN366Q4";
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3MzA3OTMzMjUsImV4cCI6MTczMDc5NjkyNX0.aK1htixkHhcsgc-E8MWjSr1qNRPyvpBD_bj9faoy5f4"
+
+
+
+
+
+
+
+
+
+;
 
             console.log("Request Body:", requestBody);
 
