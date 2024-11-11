@@ -5,6 +5,16 @@ import { check } from "express-validator";
 const router = express.Router();
 
 router.post(
+    "/GetAllTreatmentPlan",
+    [
+        check("mobile").isInt(),
+        check("nic").isInt(),
+        check("uniqueId").isString(),
+    ],
+    TreatmentPlanController.getAllTreatmentPlan
+)
+
+router.post(
     "/GetTreatmentPlanHistory",
     [
         check("UserId").isInt().not().isEmpty(),

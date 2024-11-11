@@ -1,8 +1,19 @@
 import express from "express";
-import TreatmentPlanController from "../Controller/treatment.controller.js";
+import TreatmentController from "../Controller/treatment.controller.js";
 import { check } from "express-validator";
 
 const router = express.Router();
+
+router.post(
+    "/GetAllTreatment",
+    [
+        check("mobile").isInt(),
+        check("nic").isInt(),
+        check("uniqueId").isString(),
+    ],
+    TreatmentController.getAllTreatment
+)
+
 
 router.post(
     "/GetTreatmentActivities",
@@ -11,7 +22,7 @@ router.post(
         check("TreatmentPlanId").isInt().not().isEmpty(),
     ]
     ,
-    TreatmentPlanController.getTreatmentActivities
+    TreatmentController.getTreatmentActivities
 )
 
 

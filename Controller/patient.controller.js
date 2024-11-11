@@ -32,22 +32,13 @@ const PatientController = {
                 UniqueId: uniqueId,
             };
 
-            const apiUrl = process.env.PATIENT_URL;
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3MzA3OTMzMjUsImV4cCI6MTczMDc5NjkyNX0.aK1htixkHhcsgc-E8MWjSr1qNRPyvpBD_bj9faoy5f4"
+            const apiUrl = process.env.MEDICA_BASIC_URL;
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3MzEyOTk5NjMsImV4cCI6MTczMTMwMzU2M30.Z6gRe1ivS-9RW9_39K_gMF2BdLUans67F1gxF2fj3Nc"
 
-
-
-
-
-
-
-
-
-;
-
+ 
             console.log("Request Body:", requestBody);
 
-            const apiResponse = await axios.post(apiUrl, requestBody, {
+            const apiResponse = await axios.post(`${apiUrl}/Patient/GetPatient`, requestBody, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
