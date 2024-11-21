@@ -62,68 +62,142 @@ class Validation {
   //     });
   // };
 
+  // static arrayValue = ({ name, value }) => {
+  //   console.log("Validating array:", name, value);
+
+  //   // Validate that value is an array
+  //   if (!Array.isArray(value)) {
+  //       throw new Error(`${name} must be an array`);
+  //   }
+
+  //   // Define required fields with type validation
+  //   const requiredFields = [
+  //       { key: 'TreatmentName', type: 'string' },
+  //       { key: 'StartDate', type: 'string', pattern: /^\d{4}-\d{2}-\d{2}$/, errorMsg: 'in YYYY-MM-DD format' },
+  //       { key: 'EndDate', type: 'string', pattern: /^\d{4}-\d{2}-\d{2}$/, errorMsg: 'in YYYY-MM-DD format' },
+  //       { key: 'TreatmentStatus', type: 'string' },
+  //       { key: 'CDTCode', type: 'string' },
+  //       { key: 'Info', type: 'string' }
+  //   ];
+
+  //   // Prepare data for TVP
+  //   const tvpData = new all.Table();
+  //   tvpData.columns.add('TreatmentName', all.VarChar(10));
+  //   tvpData.columns.add('StartDate', all.VarChar(10));
+  //   tvpData.columns.add('EndDate', all.VarChar(10));
+  //   tvpData.columns.add('TreatmentStatus', all.VarChar(50));
+  //   tvpData.columns.add('CDTCode', all.VarChar(10));
+  //   tvpData.columns.add('Info', all.Text);
+
+  //   value.forEach((item, index) => {
+  //       console.log("Validating object at index:", index, item);
+
+  //       if (typeof item !== 'object' || item === null) {
+  //           throw new Error(`${name}[${index}] must be a non-null object`);
+  //       }
+
+  //       requiredFields.forEach(({ key, type, pattern, errorMsg = '' }) => {
+  //           if (!item.hasOwnProperty(key)) {
+  //               throw new Error(`${name}[${index}] missing required field: ${key}`);
+  //           }
+  //           if (typeof item[key] !== type) {
+  //               throw new Error(`${name}[${index}].${key} must be a ${type}`);
+  //           }
+  //           if (pattern && !pattern.test(item[key])) {
+  //               throw new Error(`${name}[${index}].${key} must be ${errorMsg}`);
+  //           }
+  //       });
+
+  //       // Add validated item to the TVP data
+  //       tvpData.rows.add(
+  //           item.TreatmentName,
+  //           item.StartDate,
+  //           item.EndDate,
+  //           item.TreatmentStatus,
+  //           item.CDTCode,
+  //           item.Info
+  //       );
+
+  //       console.log(`Validation passed for ${name}[${index}]`);
+  //   });
+
+  //   console.log("Array validation completed successfully.");
+  //   return tvpData;
+  // };
+
   static arrayValue = ({ name, value }) => {
     console.log("Validating array:", name, value);
-
-    // Validate that value is an array
+    
     if (!Array.isArray(value)) {
         throw new Error(`${name} must be an array`);
     }
 
-    // Define required fields with type validation
+    // Updated required fields to handle datetime
     const requiredFields = [
         { key: 'TreatmentName', type: 'string' },
-        { key: 'StartDate', type: 'string', pattern: /^\d{4}-\d{2}-\d{2}$/, errorMsg: 'in YYYY-MM-DD format' },
-        { key: 'EndDate', type: 'string', pattern: /^\d{4}-\d{2}-\d{2}$/, errorMsg: 'in YYYY-MM-DD format' },
+        { key: 'StartDate', type: 'string' }, // Removed pattern since we'll handle date validation separately
+        { key: 'EndDate', type: 'string' },   // Removed pattern since we'll handle date validation separately
         { key: 'TreatmentStatus', type: 'string' },
         { key: 'CDTCode', type: 'string' },
         { key: 'Info', type: 'string' }
     ];
 
-    // Prepare data for TVP
+    // Prepare data for TVP with datetime columns
     const tvpData = new all.Table();
-    tvpData.columns.add('TreatmentName', all.VarChar(10));
-    tvpData.columns.add('StartDate', all.VarChar(10));
-    tvpData.columns.add('EndDate', all.VarChar(10));
+    tvpData.columns.add('TreatmentName', all.VarChar(255));  // Updated length to match SQL definition
+    tvpData.columns.add('StartDate', all.DateTime);          // Changed to DateTime
+    tvpData.columns.add('EndDate', all.DateTime);            // Changed to DateTime
     tvpData.columns.add('TreatmentStatus', all.VarChar(50));
     tvpData.columns.add('CDTCode', all.VarChar(10));
     tvpData.columns.add('Info', all.Text);
 
+    // Helper function to validate and parse date
+    const isValidDateTime = (dateStr) => {
+        const date = new Date(dateStr);
+        return !isNaN(date.getTime());
+    };
+
     value.forEach((item, index) => {
         console.log("Validating object at index:", index, item);
-
+        
         if (typeof item !== 'object' || item === null) {
             throw new Error(`${name}[${index}] must be a non-null object`);
         }
 
-        requiredFields.forEach(({ key, type, pattern, errorMsg = '' }) => {
+        // Validate required fields
+        requiredFields.forEach(({ key, type }) => {
             if (!item.hasOwnProperty(key)) {
                 throw new Error(`${name}[${index}] missing required field: ${key}`);
             }
             if (typeof item[key] !== type) {
                 throw new Error(`${name}[${index}].${key} must be a ${type}`);
             }
-            if (pattern && !pattern.test(item[key])) {
-                throw new Error(`${name}[${index}].${key} must be ${errorMsg}`);
-            }
         });
+
+        // Additional datetime validation
+        if (!isValidDateTime(item.StartDate)) {
+            throw new Error(`${name}[${index}].StartDate must be a valid datetime`);
+        }
+        if (!isValidDateTime(item.EndDate)) {
+            throw new Error(`${name}[${index}].EndDate must be a valid datetime`);
+        }
 
         // Add validated item to the TVP data
         tvpData.rows.add(
             item.TreatmentName,
-            item.StartDate,
-            item.EndDate,
+            new Date(item.StartDate), // Convert to Date object
+            new Date(item.EndDate),   // Convert to Date object
             item.TreatmentStatus,
             item.CDTCode,
             item.Info
         );
-
+        
         console.log(`Validation passed for ${name}[${index}]`);
     });
 
     console.log("Array validation completed successfully.");
     return tvpData;
-  };
+};
 }
 
 export default Validation;
