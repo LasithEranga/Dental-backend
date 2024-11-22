@@ -181,14 +181,15 @@ const TreatmentPlanController = {
             InstituteBranchId,
             InstituteId,
             UniqueId,
-        Info,
-        UserModified,
-        TreatmentData,
-        SelectedTeethPath,
-        TeethUpSelectedPath,
-        TeethSideSelectedPath,
-        TeethImageFileName,
-        DrawData} = request.body;
+            Info,
+            UserModified,
+            TreatmentData,
+            SelectedTeethPath,
+            TeethUpSelectedPath,
+            TeethSideSelectedPath,
+            TeethImageFileName,
+            DrawData
+    } = request.body;
         console.log('TreatmentData:', TreatmentData);
 
         var params = [
@@ -208,8 +209,8 @@ const TreatmentPlanController = {
             StringValue({ fieldName: "Info", value: Info }),
             ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData}),
             StringValue({ fieldName: "SelectedTeethPath", value: SelectedTeethPath }),
-            StringValue({ fieldName: "TeethUpSelectedPath", value: TeethUpSelectedPath }),
-            StringValue({ fieldName: "TeethSideSelectedPath", value: TeethSideSelectedPath }),
+            StringValue({ fieldName: "TeethUpSelectedPath", value: TeethUpSelectedPath || '' }),
+            StringValue({ fieldName: "TeethSideSelectedPath", value: TeethSideSelectedPath || '' }),
             StringValue({ fieldName: "TeethImageFileName", value: TeethImageFileName }),
             StringValue({ fieldName: "DrawData", value: DrawData }),
         ];
