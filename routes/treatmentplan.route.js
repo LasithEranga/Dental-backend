@@ -74,5 +74,13 @@ router.post(
     ,
     TreatmentPlanController.getAllTreatmentPlansDetails
 )
+router.post(
+    "/GetGenericTreatemntPlans",
+    [
+        check("UserId").isInt().not().isEmpty(),
+    ]
+    ,
+    TreatmentPlanController.getGenericTreatmentPlan
+)
 
 export default router;

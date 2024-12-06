@@ -359,6 +359,69 @@ const TreatmentPlanController = {
         next(error);
         }
     },
+
+     /**
+   *
+   * get all treatment plans details
+   *
+   * @param {request} request object
+   * @param {response} response object
+   * @param {next} next - middleware
+   * @returns
+   */
+  
+     async getGenericTreatmentPlan(request, response, next) {
+        const errors = validationResult(request);
+        if (!errors.isEmpty()) {
+            return response.status(422).json({
+                error: true,
+                message: ResponseMessages.TreatmentPlan.VALIDATION_ERROR,
+                data: errors,
+            });
+        }
+    
+        try {
+            let connection = request.app.locals.db;
+            const { UserId } = request.body;
+    
+            var params = [
+                EntityId({ fieldName: "UserId", value: UserId }),
+            ];
+    
+            let treatmentPlansResult = await executeSp({
+                spName: `GetAllTreatmentPlansWithActivities`,
+                params: params,
+                connection,
+            });
+    
+            // Process the result
+            let treatmentPlans = treatmentPlansResult.recordsets[0];
+    
+            // Parse Activities from JSON string to object
+            treatmentPlans = treatmentPlans.map((plan) => ({
+                ...plan,
+                Activities: plan.Activities ? JSON.parse(plan.Activities) : [], // Parse or set empty array if null
+            }));
+    
+            handleResponse(
+                response,
+                200,
+                "success",
+                "Data retrieved Successfully",
+                treatmentPlans
+            );
+        } catch (error) {
+            handleError(
+                response,
+                500,
+                "error",
+                error.message,
+                "Something went wrong"
+            );
+            next(error);
+        }
+    }
+        
 };
 
 export default TreatmentPlanController;
