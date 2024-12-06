@@ -185,8 +185,10 @@ class Validation {
         // Add validated item to the TVP data
         tvpData.rows.add(
             item.TreatmentName,
-            new Date(item.StartDate), // Convert to Date object
-            new Date(item.EndDate),   // Convert to Date object
+            // new Date(item.StartDate), // Convert to Date object
+            // new Date(item.EndDate),   // Convert to Date object
+            item.StartDate,
+            item.EndDate, 
             item.TreatmentStatus,
             item.CDTCode,
             item.Info

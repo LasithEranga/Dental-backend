@@ -302,6 +302,63 @@ const TreatmentPlanController = {
         next(error);
         }
     },
+
+
+    /**
+   *
+   * get all treatment plans details
+   *
+   * @param {request} request object
+   * @param {response} response object
+   * @param {next} next - middleware
+   * @returns
+   */
+    async getAllTreatmentPlansDetails(request, response, next) {
+        const errors = validationResult(request);
+        if (!errors.isEmpty()) {
+        return response.status(422).json({
+            error: true,
+            message: ResponseMessages.TreatmentPlan.VALIDATION_ERROR,
+            data: errors,
+        });
+        }
+
+        try {
+        let connection = request.app.locals.db;
+        const { PatientId,Status } = request.body;
+
+        var params = [
+            EntityId({ fieldName: "PatientId", value: PatientId }),
+            EntityId({ fieldName: "Status", value: Status }),
+        ];
+
+        let teethTreatmentPlanHistoryGetResult = await executeSp({
+            spName: ` `,
+            params: params,
+            connection,
+        });
+
+        teethTreatmentPlanHistoryGetResult =
+            teethTreatmentPlanHistoryGetResult.recordsets[0];
+
+        handleResponse(
+            response,
+            200,
+            "success",
+            "Data retrieved Successfully",
+            teethTreatmentPlanHistoryGetResult
+        );
+        } catch (error) {
+        handleError(
+            response,
+            500,
+            "error",
+            error.message,
+            "Something went wrong"
+        );
+        next(error);
+        }
+    },
 };
 
 export default TreatmentPlanController;

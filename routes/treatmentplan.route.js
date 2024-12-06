@@ -64,4 +64,15 @@ router.post(
     TreatmentPlanController.saveTreatmentPlan
 )
 
+
+router.post(
+    "/Patinets/GetAllTreatmentPlansDetails",
+    [
+        check("PatientId").isInt().not().isEmpty(),
+        check("Status").isInt().not().isEmpty(),
+    ]
+    ,
+    TreatmentPlanController.getAllTreatmentPlansDetails
+)
+
 export default router;

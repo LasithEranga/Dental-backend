@@ -14,6 +14,13 @@ router.post(
     TreatmentController.getAllTreatment
 )
 
+router.post(
+    "/GetAllTreatmentDummy",
+    [
+        check("UserId").isInt().not().isEmpty(),
+    ],
+    TreatmentController.getAllTreatmentDummy
+)
 
 router.post(
     "/GetTreatmentActivities",
