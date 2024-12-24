@@ -10,6 +10,7 @@ router.post(
     check("mobile").isInt(),
     check("nic").isInt(),
     check("uniqueId").isString(),
+    check("token").isString(),
   ],
   PatientController.getPatient
 );
