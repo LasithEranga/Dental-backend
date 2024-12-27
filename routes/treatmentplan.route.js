@@ -8,7 +8,7 @@ router.post(
     "/GetAllTreatmentPlan",
     [
         check("mobile").isInt(),
-        check("nic").isInt(),
+        check("nic").isString(),
         check("uniqueId").isString(),
     ],
     TreatmentPlanController.getAllTreatmentPlan

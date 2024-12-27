@@ -8,7 +8,7 @@ router.post(
   "/getPatients",
   [
     check("mobile").isInt(),
-    check("nic").isInt(),
+    check("nic").isString(),
     check("uniqueId").isString(),
     check("token").isString(),
   ],
