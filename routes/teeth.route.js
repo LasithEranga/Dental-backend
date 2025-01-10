@@ -43,6 +43,16 @@ router.post(
     TeethController.getAllTreatmentTeeth
 ); 
 
+router.post(
+    "/GetlastTreatmentToothData",
+    [
+        check("UserId").isInt().not().isEmpty(),
+        check("PatientId").isInt().not().isEmpty(),
+    ]
+    ,
+    TeethController.getlastTreatmentTeethData
+)
+
 
 
 export default router;

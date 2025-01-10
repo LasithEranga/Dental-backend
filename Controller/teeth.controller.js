@@ -181,6 +181,66 @@ const TeethController = {
         next(error);
         }
     },
+
+
+    /**
+   *
+   * get last tooth Treatment Details
+   *
+   * @param {request} request object
+   * @param {response} response object
+   * @param {next} next - middleware
+   * @returns
+   */
+    async getlastTreatmentTeethData(request, response, next) {
+        console.log("GetlastTreatmentTeethData");
+        const errors = validationResult(request);
+        if (!errors.isEmpty()) {
+        return response.status(422).json({
+            error: true,
+            message: ResponseMessages.TreatmentPlan.VALIDATION_ERROR,
+            data: errors,
+        });
+        }
+
+        try {
+        let connection = request.app.locals.db;
+        const { UserId, PatientId } = request.body;
+
+        var params = [
+            EntityId({ fieldName: "UserId", value: UserId }),
+            EntityId({ fieldName: "PatientId", value: PatientId }),
+        ];
+
+        let treatmentPlanHistoryGetResult = await executeSp({
+            spName: `GetlastTreatmentToothData`,
+            params: params,
+            connection,
+        });
+
+        treatmentPlanHistoryGetResult =
+            treatmentPlanHistoryGetResult.recordsets[0];
+
+        handleResponse(
+            response,
+            200,
+            "success",
+            "Data retrieved Successfully",
+            treatmentPlanHistoryGetResult
+        );
+        } catch (error) {
+        handleError(
+            response,
+            500,
+            "error",
+            error.message,
+            "Something went wrong"
+        );
+        next(error);
+        }
+    },
 };
+
+
 
 export default TeethController;
