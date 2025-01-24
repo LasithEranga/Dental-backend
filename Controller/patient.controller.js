@@ -33,7 +33,6 @@ const PatientController = {
             };
 
             const apiUrl = process.env.MEDICA_BASIC_URL;
-            // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhYmMiLCJpYXQiOjE3MzEyOTk5NjMsImV4cCI6MTczMTMwMzU2M30.Z6gRe1ivS-9RW9_39K_gMF2BdLUans67F1gxF2fj3Nc"
             
             console.log("Request Body:", requestBody);
 
