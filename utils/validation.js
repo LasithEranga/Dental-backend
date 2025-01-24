@@ -42,89 +42,45 @@ class Validation {
     if (typeof value !== "number") throw new Error(`${name} must be a decimal`);
   };
 
-  // static arrayValue = ({ name, value }) => {
-  //   this.fieldName({ name });
-  //   if (!Array.isArray(value)) throw new Error(`${name} must be a array`);
-  //   console.log("value pass in arrayvalue function ", value);
-  // };
 
-  // static arrayValue = ({ name, value }) => {
-  //     console.log("Validating array //////////:", name, value);
-  //     this.fieldName({ name });
-  //     if (!Array.isArray(value)) throw new Error(`${name} must be an array`);
-  //     value.forEach((item, index) => {
-  //       if (typeof item !== 'object') throw new Error(`${name}[${index}] must be an object`);
-  //       console.log("Validating each objects:", name, index);
-  //       // Validate each field of the treatment data object as needed
-  //       if (!item.StartDate || typeof item.StartDate !== 'string') 
-  //           throw new Error(`${name}[${index}].StartDate must be a string`);
-  //       // Add additional field validations here
-  //     });
-  // };
+  static normalArrayValue ({ name, value }) {
+    if (!Array.isArray(value)) {
+      throw new Error(`${name} must be an array`);
+    }
+    if (value.length === 0) {
+      throw new Error(`${name} cannot be an empty array`);
+    }
 
-  // static arrayValue = ({ name, value }) => {
-  //   console.log("Validating array:", name, value);
+    // Optionally, you can perform additional validations for the elements inside the array
+    value.forEach((item, index) => {
+      if (typeof item !== "object" || !item.color || !item.points) {
+        throw new Error(
+          `${name}[${index}] must be an object with 'color' and 'points' properties`
+        );
+      }
 
-  //   // Validate that value is an array
-  //   if (!Array.isArray(value)) {
-  //       throw new Error(`${name} must be an array`);
-  //   }
+      if (typeof item.color !== "string") {
+        throw new Error(`${name}[${index}].color must be a string`);
+      }
 
-  //   // Define required fields with type validation
-  //   const requiredFields = [
-  //       { key: 'TreatmentName', type: 'string' },
-  //       { key: 'StartDate', type: 'string', pattern: /^\d{4}-\d{2}-\d{2}$/, errorMsg: 'in YYYY-MM-DD format' },
-  //       { key: 'EndDate', type: 'string', pattern: /^\d{4}-\d{2}-\d{2}$/, errorMsg: 'in YYYY-MM-DD format' },
-  //       { key: 'TreatmentStatus', type: 'string' },
-  //       { key: 'CDTCode', type: 'string' },
-  //       { key: 'Info', type: 'string' }
-  //   ];
+      if (!Array.isArray(item.points) || item.points.length === 0) {
+        throw new Error(`${name}[${index}].points must be a non-empty array`);
+      }
 
-  //   // Prepare data for TVP
-  //   const tvpData = new all.Table();
-  //   tvpData.columns.add('TreatmentName', all.VarChar(10));
-  //   tvpData.columns.add('StartDate', all.VarChar(10));
-  //   tvpData.columns.add('EndDate', all.VarChar(10));
-  //   tvpData.columns.add('TreatmentStatus', all.VarChar(50));
-  //   tvpData.columns.add('CDTCode', all.VarChar(10));
-  //   tvpData.columns.add('Info', all.Text);
-
-  //   value.forEach((item, index) => {
-  //       console.log("Validating object at index:", index, item);
-
-  //       if (typeof item !== 'object' || item === null) {
-  //           throw new Error(`${name}[${index}] must be a non-null object`);
-  //       }
-
-  //       requiredFields.forEach(({ key, type, pattern, errorMsg = '' }) => {
-  //           if (!item.hasOwnProperty(key)) {
-  //               throw new Error(`${name}[${index}] missing required field: ${key}`);
-  //           }
-  //           if (typeof item[key] !== type) {
-  //               throw new Error(`${name}[${index}].${key} must be a ${type}`);
-  //           }
-  //           if (pattern && !pattern.test(item[key])) {
-  //               throw new Error(`${name}[${index}].${key} must be ${errorMsg}`);
-  //           }
-  //       });
-
-  //       // Add validated item to the TVP data
-  //       tvpData.rows.add(
-  //           item.TreatmentName,
-  //           item.StartDate,
-  //           item.EndDate,
-  //           item.TreatmentStatus,
-  //           item.CDTCode,
-  //           item.Info
-  //       );
-
-  //       console.log(`Validation passed for ${name}[${index}]`);
-  //   });
-
-  //   console.log("Array validation completed successfully.");
-  //   return tvpData;
-  // };
-
+      item.points.forEach((point, pointIndex) => {
+        if (
+          typeof point !== "object" ||
+          typeof point.x !== "number" ||
+          typeof point.y !== "number"
+        ) {
+          throw new Error(
+            `${name}[${index}].points[${pointIndex}] must be an object with numeric 'x' and 'y' properties`
+          );
+        }
+      });
+    });
+  };
+  
   static arrayValue = ({ name, value }) => {
     console.log("Validating array:", name, value);
     

@@ -100,16 +100,30 @@ export const DecimalValue = ({ fieldName, value }) => {
   };
 };
 
-// export const ArrayValue = ({ fieldName, value }) => {
+// export const NormalArrayValue = ({ fieldName, value }) => {
 //   console.log("Validating array:", fieldName, value);
+  
 //   Validation.fieldName({ name: fieldName });
-//   Validation.arrayValue({ name: fieldName, value });
+//   Validation.normalArrayValue({ name: fieldName, value });
 //   return {
 //     name: fieldName,
 //     type: Array,
 //     value,
 //   };
 // };
+
+export const NormalArrayValue = ({ fieldName, value }) => {
+  console.log("Validating array:", fieldName, value); 
+  if (!Array.isArray(value)) {
+    throw new Error(`${fieldName} must be an array`);
+  } 
+  const jsonValue = JSON.stringify(value); 
+  return {
+    name: fieldName,
+    type: sql.NVarChar(sql.MAX),  
+    value: jsonValue
+  };
+};
 
 export const ArrayValue = ({ fieldName, value }) => {
   console.log("Validating array:", fieldName, value);

@@ -281,7 +281,7 @@ const TeethController = {
                 response,
                 200,
                 "success",
-                "MissingTeeth Data retrieve Successfully",
+                "Treatmentplan Complete Tooth Data retrieve Successfully",
                 missingTeethGetResult
             );
             } catch (error) {

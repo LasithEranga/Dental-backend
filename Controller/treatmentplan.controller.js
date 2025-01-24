@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
 import ResponseMessages from "../config/messages.js";
-import { ArrayValue, DateString, EntityId, StringValue } from "../utils/type-def.js";
+import { ArrayValue, DateString, EntityId, NormalArrayValue, StringValue } from "../utils/type-def.js";
 import executeSp from "../utils/exeSp.js";
 import handleResponse from "../utils/handleResponse.js";
 import handleError from "../utils/handleError.js";
@@ -211,11 +211,12 @@ const TreatmentPlanController = {
             StringValue({ fieldName: "SelectedTeethPath", value: SelectedTeethPath }),
             StringValue({ fieldName: "TeethUpSelectedPath", value: TeethUpSelectedPath || '' }),
             StringValue({ fieldName: "TeethSideSelectedPath", value: TeethSideSelectedPath || '' }),
-            StringValue({ fieldName: "TeethImageFileName", value: TeethImageFileName }),
-            StringValue({ fieldName: "DrawData", value: DrawData }),
+            StringValue({ fieldName: "TeethImageFileName", value: TeethImageFileName || '' }),
+            NormalArrayValue({ fieldName: "DrawData", value: DrawData }),
         ];
         console.log('All Validations Passed');
         console.log('Params:', params);
+        console.log('treatmentPlanHistoryGetResult:');
 
         let treatmentPlanHistoryGetResult = await executeSp({
             spName: `TreatmentPlanSave`,
@@ -224,7 +225,8 @@ const TreatmentPlanController = {
         });
 
         treatmentPlanHistoryGetResult =
-            treatmentPlanHistoryGetResult.recordsets[0];
+        treatmentPlanHistoryGetResult.recordsets[0];
+        console.log('treatmentPlanHistoryGetResult:', treatmentPlanHistoryGetResult);
 
         handleResponse(
             response,

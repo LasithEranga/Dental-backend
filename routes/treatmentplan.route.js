@@ -57,7 +57,7 @@ router.post(
         check("TeethUpSelectedPath").optional().isString(),
         check("TeethSideSelectedPath").optional().isString(),
         check("TeethImageFileName").isString().not().isEmpty(),
-        check("DrawData").isString().not().isEmpty(),
+        check("DrawData").isArray().not().isEmpty(),
         // check("TreatmentData").isArray().not().isEmpty(),
     ]
     ,
