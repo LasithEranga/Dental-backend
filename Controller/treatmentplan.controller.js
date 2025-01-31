@@ -187,7 +187,7 @@ const TreatmentPlanController = {
             SelectedTeethPath,
             TeethUpSelectedPath,
             TeethSideSelectedPath,
-            TeethImageFileName,
+            // TeethImageFileName,
             DrawData
     } = request.body;
         console.log('TreatmentData:', TreatmentData);
@@ -211,7 +211,7 @@ const TreatmentPlanController = {
             StringValue({ fieldName: "SelectedTeethPath", value: SelectedTeethPath }),
             StringValue({ fieldName: "TeethUpSelectedPath", value: TeethUpSelectedPath || '' }),
             StringValue({ fieldName: "TeethSideSelectedPath", value: TeethSideSelectedPath || '' }),
-            StringValue({ fieldName: "TeethImageFileName", value: TeethImageFileName || '' }),
+            // StringValue({ fieldName: "TeethImageFileName", value: TeethImageFileName || '' }),
             NormalArrayValue({ fieldName: "DrawData", value: DrawData }),
         ];
         console.log('All Validations Passed');
@@ -247,6 +247,108 @@ const TreatmentPlanController = {
         }
     },
 
+
+        /**
+   *
+   * save AdminTreatmentPlan
+   *
+   * @param {request} request object
+   * @param {response} response object
+   * @param {next} next - middleware
+   * @returns
+   */
+        async saveAdminTreatmentPlan(request, response, next) {
+            const errors = validationResult(request);
+            if (!errors.isEmpty()) {
+            return response.status(422).json({
+                error: true,
+                message: ResponseMessages.TreatmentPlan.VALIDATION_ERROR,
+                data: errors,
+            });
+            }
+    
+            try {
+            let connection = request.app.locals.db;
+            
+            const { 
+                Id,
+                TeethId, 
+                TreatmentPlanName, 
+                Reason,
+                StartDate,
+                EstimatedDate,
+                Status, 
+                PatientId,
+                DoctorId, 
+                InstituteBranchId,
+                InstituteId,
+                UniqueId,
+                Info,
+                UserModified,
+                TreatmentData,
+                SelectedTeethPath,
+                TeethUpSelectedPath,
+                TeethSideSelectedPath,
+                TeethImageFileName,
+                DrawData
+        } = request.body;
+            console.log('TreatmentData:', TreatmentData);
+    
+            var params = [
+                EntityId({ fieldName: "Id", value: Id }),
+                EntityId({ fieldName: "TeethId", value: TeethId }),
+                StringValue({ fieldName: "TreatmentPlanName", value: TreatmentPlanName }),
+                StringValue({ fieldName: "Reason", value: Reason }),
+                DateString({ fieldName: "StartDate", value: StartDate }),
+                DateString({ fieldName: "EstimatedDate", value: EstimatedDate }),
+                StringValue({ fieldName: "Status", value: Status }),
+                EntityId({ fieldName: "PatientId", value: PatientId }),
+                EntityId({ fieldName: "DoctorId", value: DoctorId }),
+                EntityId({ fieldName: "InstituteBranchId", value: InstituteBranchId }),
+                EntityId({ fieldName: "InstituteId", value: InstituteId }),
+                EntityId({ fieldName: "UniqueId", value: UniqueId }),
+                EntityId({ fieldName: "UserModified", value: UserModified }),
+                StringValue({ fieldName: "Info", value: Info }),
+                ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData}),
+                StringValue({ fieldName: "SelectedTeethPath", value: SelectedTeethPath }),
+                StringValue({ fieldName: "TeethUpSelectedPath", value: TeethUpSelectedPath || '' }),
+                StringValue({ fieldName: "TeethSideSelectedPath", value: TeethSideSelectedPath || '' }),
+                StringValue({ fieldName: "TeethImageFileName", value: TeethImageFileName || '' }),
+                NormalArrayValue({ fieldName: "DrawData", value: DrawData }),
+            ];
+            console.log('All Validations Passed');
+            console.log('Params:', params);
+            console.log('treatmentPlanHistoryGetResult:');
+    
+            let treatmentPlanHistoryGetResult = await executeSp({
+                spName: `TreatmentPlanSave`,
+                params: params,
+                connection,
+            });
+    
+            treatmentPlanHistoryGetResult =
+            treatmentPlanHistoryGetResult.recordsets[0];
+            console.log('treatmentPlanHistoryGetResult:', treatmentPlanHistoryGetResult);
+    
+            handleResponse(
+                response,
+                200,
+                "success",
+                "Data save Successfully",
+                treatmentPlanHistoryGetResult
+            );
+            } catch (error) {
+            handleError(
+                response,
+                500,
+                "error",
+                error.message,
+                "Something went wrong"
+            );
+            next(error);
+            }
+        },
+    
 
     /**
    *
