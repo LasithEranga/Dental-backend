@@ -4,6 +4,7 @@ import { ArrayValue, DateString, EntityId, NormalArrayValue, StringValue } from 
 import executeSp from "../utils/exeSp.js";
 import handleResponse from "../utils/handleResponse.js";
 import handleError from "../utils/handleError.js";
+import sql from "mssql";
 
 const TreatmentPlanController = {
 
@@ -272,56 +273,60 @@ const TreatmentPlanController = {
             
             const { 
                 Id,
-                TeethId, 
-                TreatmentPlanName, 
-                Reason,
-                StartDate,
-                EstimatedDate,
-                Status, 
-                PatientId,
-                DoctorId, 
-                InstituteBranchId,
-                InstituteId,
-                UniqueId,
-                Info,
+                Name, 
+                Image,
                 UserModified,
+                InstituteId,
+                InstituteBranchId,
                 TreatmentData,
-                SelectedTeethPath,
-                TeethUpSelectedPath,
-                TeethSideSelectedPath,
-                TeethImageFileName,
-                DrawData
+                OpdServicesType,
         } = request.body;
             console.log('TreatmentData:', TreatmentData);
     
+
+            const OpdServicesTypesTable = new sql.Table();
+            OpdServicesTypesTable.columns.add("CategoryId", sql.Int);
+            OpdServicesTypesTable.columns.add("SubCategoryId", sql.Int);
+            OpdServicesTypesTable.columns.add("ServiceName", sql.NVarChar(50));
+            OpdServicesTypesTable.columns.add("Price", sql.NVarChar(50));
+            OpdServicesTypesTable.columns.add("CDTCode", sql.NVarChar(10)); 
+            OpdServicesTypesTable.columns.add("Gap", sql.Int);
+
+            if (
+                Array.isArray(OpdServicesType) &&
+                OpdServicesType.length > 0
+            ) {
+                OpdServicesType.forEach((data) => {
+                    OpdServicesTypesTable.rows.add(
+                    data.CategoryId,
+                    data.SubCategoryId,
+                    data.ServiceName,
+                    data.Price,
+                    data.CDTCode,
+                    data.Gap
+                );
+                });
+            }
+
             var params = [
                 EntityId({ fieldName: "Id", value: Id }),
-                EntityId({ fieldName: "TeethId", value: TeethId }),
-                StringValue({ fieldName: "TreatmentPlanName", value: TreatmentPlanName }),
-                StringValue({ fieldName: "Reason", value: Reason }),
-                DateString({ fieldName: "StartDate", value: StartDate }),
-                DateString({ fieldName: "EstimatedDate", value: EstimatedDate }),
-                StringValue({ fieldName: "Status", value: Status }),
-                EntityId({ fieldName: "PatientId", value: PatientId }),
-                EntityId({ fieldName: "DoctorId", value: DoctorId }),
-                EntityId({ fieldName: "InstituteBranchId", value: InstituteBranchId }),
-                EntityId({ fieldName: "InstituteId", value: InstituteId }),
-                EntityId({ fieldName: "UniqueId", value: UniqueId }),
+                StringValue({ fieldName: "Name", value: Name }),
+                StringValue({ fieldName: "Image", value: Image }),
                 EntityId({ fieldName: "UserModified", value: UserModified }),
-                StringValue({ fieldName: "Info", value: Info }),
-                ArrayValue({ fieldName: "TreatmentData" , value: TreatmentData}),
-                StringValue({ fieldName: "SelectedTeethPath", value: SelectedTeethPath }),
-                StringValue({ fieldName: "TeethUpSelectedPath", value: TeethUpSelectedPath || '' }),
-                StringValue({ fieldName: "TeethSideSelectedPath", value: TeethSideSelectedPath || '' }),
-                StringValue({ fieldName: "TeethImageFileName", value: TeethImageFileName || '' }),
-                NormalArrayValue({ fieldName: "DrawData", value: DrawData }),
+                EntityId({ fieldName: "InstituteId", value: InstituteId }),
+                EntityId({ fieldName: "InstituteBranchId", value: InstituteBranchId }),
+                {
+                    name: "OpdServicesType",
+                    type: sql.TVP("OpdServicesTypes"),
+                    value: OpdServicesTypesTable,
+                },
             ];
             console.log('All Validations Passed');
             console.log('Params:', params);
             console.log('treatmentPlanHistoryGetResult:');
     
             let treatmentPlanHistoryGetResult = await executeSp({
-                spName: `TreatmentPlanSave`,
+                spName: `TreatmentPlanGenericSave`,
                 params: params,
                 connection,
             });
