@@ -94,7 +94,7 @@ class Validation {
         { key: 'StartDate', type: 'string' }, // Removed pattern since we'll handle date validation separately
         { key: 'EndDate', type: 'string' },   // Removed pattern since we'll handle date validation separately
         { key: 'TreatmentStatus', type: 'string' },
-        { key: 'CDTCode', type: 'string' },
+        // { key: 'CDTCode', type: 'string' },
         { key: 'Info', type: 'string' }
     ];
 
